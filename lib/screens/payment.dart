@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:sap_pi/models/ordered_medicine_model.dart';
+import 'package:sap_pi/screens/sorry.dart';
 import 'package:sap_pi/utils/constants.dart';
 import 'package:sap_pi/utils/dialogs/error_dialog.dart';
-import 'package:sap_pi/utils/dialogs/info_dialog.dart';
+import 'package:sap_pi/utils/dialogs/success_dialog.dart';
 import 'package:sap_pi/widgets/custom_button.dart';
 import 'package:sap_pi/widgets/gradient_scaffold.dart';
 import 'package:sap_pi/screens/thank_you.dart';
@@ -25,34 +26,61 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   CardFieldInputDetails? _card;
+  bool _isProcessing = false;
+  bool _isButtonDisabled = false;
 
   Future<void> _handlePayPress() async {
     if (_card == null) {
       return;
     }
 
+    setState(() {
+      _isButtonDisabled = true;
+    });
+
     final clientSecret = await createPaymentIntent(widget.amount);
 
-    await Stripe.instance.confirmPayment(
-      paymentIntentClientSecret: clientSecret['paymentIntent'],
-      data: const PaymentMethodParams.card(
-        paymentMethodData: PaymentMethodData(),
-      ),
-    );
+    try {
+      await Stripe.instance.confirmPayment(
+        paymentIntentClientSecret: clientSecret['paymentIntent'],
+        data: const PaymentMethodParams.card(
+          paymentMethodData: PaymentMethodData(),
+        ),
+      );
+    } on StripeException {
+      if (mounted) showErrorDialog(context, 'Payment failed');
+      return;
+    }
 
-    if (mounted) showInfoDialog(context, 'Payment', 'Payment succeeded!');
+    if (mounted) await showSuccessDialog(context, 'Payment succeeded!');
 
-    await _submitMedicines();
+    setState(() {
+      _isProcessing = true;
+    });
 
-    if (mounted) {
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ThankYouScreen(),
-            ),
-            (route) => false);
-      });
+    final completed = await _submitMedicines();
+
+    setState(() {
+      _isProcessing = false;
+      _isButtonDisabled = false;
+    });
+
+    if (completed && mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ThankYouScreen(),
+        ),
+        (route) => false,
+      );
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SorryScreen(),
+        ),
+        (route) => false,
+      );
     }
   }
 
@@ -73,8 +101,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  Future<void> _submitMedicines() async {
-    await http.post(
+  Future<bool> _submitMedicines() async {
+    final response = await http.post(
       Uri.parse('${Constants.baseUrl}/order-medicines'),
       body: json.encode(
         widget.orderedMedicines.map((om) => om.toJson()).toList(),
@@ -83,58 +111,89 @@ class _PaymentScreenState extends State<PaymentScreen> {
         'Content-Type': 'application/json',
       },
     );
+
+    final result = json.decode(response.body);
+
+    if (response.statusCode == 200 && mounted) {
+      await showSuccessDialog(context, 'Medicines received successfully');
+      return true;
+    } else {
+      await showErrorDialog(context, result['detail']);
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return GradientScaffold(
       appBar: AppBar(
-        title: const Text("Payment Screen"),
+        title: const Text("Payment"),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CardField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Card Details',
-                  ),
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
-                  onCardChanged: (card) {
-                    setState(() {
-                      _card = card;
-                    });
-                  },
+        child: _isProcessing
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      'Processing Order...',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 32),
+                    CircularProgressIndicator(),
+                  ],
                 ),
-                const SizedBox(height: 16.0),
-                Text(
-                  'Total: ${widget.amount} EGP',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CardField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Card Details',
+                        ),
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                        onCardChanged: (card) {
+                          setState(() {
+                            _card = card;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Total: ${widget.amount} EGP',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            CustomButton(
-              onPressed: () {
-                _card?.complete == true
-                    ? _handlePayPress()
-                    : showErrorDialog(
-                        context, 'Please complete the card details');
-              },
-              text: 'Pay',
-            )
-          ],
-        ),
+                  CustomButton(
+                    onPressed: () {
+                      _isButtonDisabled
+                          ? null
+                          : _card?.complete == true
+                              ? _handlePayPress()
+                              : showErrorDialog(
+                                  context,
+                                  'Please complete the card details',
+                                );
+                    },
+                    text: 'Pay',
+                  )
+                ],
+              ),
       ),
     );
   }

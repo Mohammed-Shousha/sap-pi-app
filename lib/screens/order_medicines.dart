@@ -35,10 +35,7 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
       final jsonList = json.decode(response.body) as List;
 
       setState(() {
-        _medicines = jsonList
-            .map((json) => Medicine.fromJson(json))
-            .where((medicine) => medicine.availableQuantity > 0)
-            .toList();
+        _medicines = jsonList.map((json) => Medicine.fromJson(json)).toList();
       });
     } else {
       if (mounted) showErrorDialog(context, 'Failed to fetch medicines');

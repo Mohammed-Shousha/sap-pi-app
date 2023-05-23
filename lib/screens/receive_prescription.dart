@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:sap_pi/models/ordered_medicine_model.dart';
+import 'package:sap_pi/screens/sorry.dart';
+import 'package:sap_pi/screens/thank_you.dart';
 import 'package:sap_pi/utils/constants.dart';
 import 'package:sap_pi/utils/dialogs/confirm_dialog.dart';
-import 'package:sap_pi/utils/dialogs/info_dialog.dart';
+import 'package:sap_pi/utils/dialogs/success_dialog.dart';
 import 'package:sap_pi/widgets/gradient_scaffold.dart';
 import 'package:sap_pi/widgets/custom_button.dart';
 import 'package:sap_pi/utils/dialogs/error_dialog.dart';
@@ -20,8 +22,14 @@ class ReceivePrescription extends StatefulWidget {
 class _ReceivePrescriptionState extends State<ReceivePrescription> {
   List<OrderedMedicine> _availableMedicines = [];
   List<OrderedMedicine> _unavailableMedicines = [];
+  bool _isProcessing = false;
+  bool _isButtonDisabled = false;
 
   Future<void> _scanQrCode() async {
+    setState(() {
+      _isButtonDisabled = true;
+    });
+
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
       '#3BBDB1',
       'Cancel',
@@ -47,9 +55,35 @@ class _ReceivePrescriptionState extends State<ReceivePrescription> {
         '${_unavailableMedicines.isNotEmpty ? ', and create a new prescription for the following medicines: $unavailableMedicinesNames?' : '?'}',
       );
 
+      setState(() {
+        _isProcessing = true;
+      });
+
       if (shouldProcess) {
-        await _processPrescription(barcodeScanRes);
+        final completed = await _processPrescription(barcodeScanRes);
+        if (mounted && completed) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ThankYouScreen(),
+            ),
+            (route) => false,
+          );
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SorryScreen(),
+            ),
+            (route) => false,
+          );
+        }
       }
+
+      setState(() {
+        _isProcessing = false;
+        _isButtonDisabled = false;
+      });
     }
   }
 
@@ -62,7 +96,7 @@ class _ReceivePrescriptionState extends State<ReceivePrescription> {
     final result = json.decode(response.body);
 
     if (response.statusCode != 200 && mounted) {
-      showErrorDialog(context, result['detail']);
+      await showErrorDialog(context, result['detail']);
       return false;
     }
 
@@ -83,7 +117,7 @@ class _ReceivePrescriptionState extends State<ReceivePrescription> {
     return true;
   }
 
-  Future<void> _processPrescription(String prescriptionId) async {
+  Future<bool> _processPrescription(String prescriptionId) async {
     final response = await http.post(
       Uri.parse('${Constants.baseUrl}/process-prescription/$prescriptionId'),
       body: json.encode({
@@ -97,12 +131,14 @@ class _ReceivePrescriptionState extends State<ReceivePrescription> {
       },
     );
 
-    if (mounted) {
-      if (response.statusCode == 200) {
-        showInfoDialog(context, 'Success', 'Medicines received successfully');
-      } else {
-        showErrorDialog(context, 'Failed to receive medicines');
-      }
+    final result = json.decode(response.body);
+
+    if (response.statusCode == 200 && mounted) {
+      await showSuccessDialog(context, 'Medicines received successfully');
+      return true;
+    } else {
+      await showErrorDialog(context, result['detail']);
+      return false;
     }
   }
 
@@ -113,10 +149,27 @@ class _ReceivePrescriptionState extends State<ReceivePrescription> {
         title: const Text('Receive Prescription'),
       ),
       body: Center(
-        child: CustomButton(
-          text: 'Scan Prescription QR Code',
-          onPressed: _scanQrCode,
-        ),
+        child: !_isProcessing
+            ? CustomButton(
+                text: 'Scan Prescription QR Code',
+                onPressed: () {
+                  _isButtonDisabled ? null : _scanQrCode();
+                },
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'Processing Order...',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 32),
+                  CircularProgressIndicator(),
+                ],
+              ),
       ),
     );
   }

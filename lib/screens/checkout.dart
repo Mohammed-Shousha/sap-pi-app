@@ -50,18 +50,19 @@ class CheckoutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               CustomButton(
-                  text: "Proceed to Payment",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentScreen(
-                          amount: orderTotal,
-                          orderedMedicines: orderedMedicines,
-                        ),
+                text: "Proceed to Payment",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentScreen(
+                        amount: orderTotal,
+                        orderedMedicines: orderedMedicines,
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(height: 16),
             ],
           ),
