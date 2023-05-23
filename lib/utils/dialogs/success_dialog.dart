@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sap_pi/utils/dialogs/generic_dialog.dart';
 
-Future<void> showInfoDialog(
+Future<void> showSuccessDialog(
   BuildContext context,
-  String title,
   String message,
 ) {
   return showGenericDialog<void>(
     context: context,
-    title: title,
+    title: 'Success',
     content: message,
     optionsBuilder: () => {
       'OK': null,
