@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sap_pi/utils/constants.dart';
-import 'package:sap_pi/widgets/gradient_scaffold.dart';
+
 import 'package:sap_pi/screens/welcome.dart';
 
-class ThankYouScreen extends StatefulWidget {
-  const ThankYouScreen({super.key});
+import 'package:sap_pi/widgets/gradient_scaffold.dart';
+
+import 'package:sap_pi/utils/constants.dart';
+
+class ClosingScreen extends StatefulWidget {
+  final bool isSuccessful;
+
+  const ClosingScreen({
+    super.key,
+    required this.isSuccessful,
+  });
 
   @override
-  State<ThankYouScreen> createState() => _ThankYouScreenState();
+  State<ClosingScreen> createState() => _ClosingScreenState();
 }
 
-class _ThankYouScreenState extends State<ThankYouScreen> {
+class _ClosingScreenState extends State<ClosingScreen> {
   @override
   void initState() {
     super.initState();
@@ -41,17 +49,21 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
               height: Constants.imageHeight,
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Thank You for choosing SAP',
-              style: TextStyle(
+            Text(
+              widget.isSuccessful
+                  ? 'Thank You for choosing SAP'
+                  : 'Sorry, there was an error getting medicines',
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'We hope to see you again!',
-              style: TextStyle(
+            Text(
+              widget.isSuccessful
+                  ? 'We hope to see you again!'
+                  : 'Contact us at 1234567890',
+              style: const TextStyle(
                 fontSize: 25,
               ),
             ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sap_pi/utils/constants.dart';
+
+import 'package:sap_pi/screens/home.dart';
+
 import 'package:sap_pi/widgets/gradient_scaffold.dart';
 import 'package:sap_pi/widgets/custom_button.dart';
-import 'package:sap_pi/screens/start.dart';
+
+import 'package:sap_pi/utils/constants.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -34,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const StartScreen(),
+                    builder: (context) => const HomeScreen(),
                   ),
                 );
               },
