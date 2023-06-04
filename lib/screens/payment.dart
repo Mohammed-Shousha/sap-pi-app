@@ -2,23 +2,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:sap_pi/models/ordered_medicine_model.dart';
-import 'package:sap_pi/screens/sorry.dart';
-import 'package:sap_pi/utils/constants.dart';
-import 'package:sap_pi/utils/dialogs/error_dialog.dart';
-import 'package:sap_pi/utils/dialogs/success_dialog.dart';
+import 'package:provider/provider.dart';
+
+import 'package:sap_pi/providers/medicines_provider.dart';
+
+import 'package:sap_pi/screens/closing.dart';
+
 import 'package:sap_pi/widgets/custom_button.dart';
 import 'package:sap_pi/widgets/gradient_scaffold.dart';
-import 'package:sap_pi/screens/thank_you.dart';
+
+import 'package:sap_pi/utils/dialogs/success_dialog.dart';
+import 'package:sap_pi/utils/dialogs/error_dialog.dart';
+import 'package:sap_pi/utils/constants.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final num amount;
-  final List<OrderedMedicine> orderedMedicines;
-
   const PaymentScreen({
     super.key,
-    required this.amount,
-    required this.orderedMedicines,
   });
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -26,10 +25,12 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   CardFieldInputDetails? _card;
-  bool _isProcessing = false;
   bool _isButtonDisabled = false;
 
   Future<void> _handlePayPress() async {
+    MedicinesProvider medicinesProvider =
+        Provider.of<MedicinesProvider>(context, listen: false);
+
     if (_card == null) {
       return;
     }
@@ -38,7 +39,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       _isButtonDisabled = true;
     });
 
-    final clientSecret = await createPaymentIntent(widget.amount);
+    final clientSecret =
+        await createPaymentIntent(medicinesProvider.orderTotal!);
 
     try {
       await Stripe.instance.confirmPayment(
@@ -54,14 +56,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     if (mounted) await showSuccessDialog(context, 'Payment succeeded!');
 
-    setState(() {
-      _isProcessing = true;
-    });
-
     final completed = await _submitMedicines();
 
     setState(() {
-      _isProcessing = false;
       _isButtonDisabled = false;
     });
 
@@ -69,7 +66,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const ThankYouScreen(),
+          builder: (context) => const ClosingScreen(
+            isSuccessful: true,
+          ),
         ),
         (route) => false,
       );
@@ -77,7 +76,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const SorryScreen(),
+          builder: (context) => const ClosingScreen(
+            isSuccessful: false,
+          ),
         ),
         (route) => false,
       );
@@ -87,7 +88,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<Map<String, dynamic>> createPaymentIntent(num amount) async {
     try {
       var response = await http.post(
-        Uri.parse('${Constants.paymentUrl}/payment-sheet'),
+        Uri.parse(Constants.paymentUrl),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -102,99 +103,102 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future<bool> _submitMedicines() async {
-    final response = await http.post(
-      Uri.parse('${Constants.baseUrl}/order-medicines'),
-      body: json.encode(
-        widget.orderedMedicines.map((om) => om.toJson()).toList(),
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
+    MedicinesProvider medicinesProvider =
+        Provider.of<MedicinesProvider>(context, listen: false);
 
-    final result = json.decode(response.body);
+    bool result = await medicinesProvider.orderMedicines();
 
-    if (response.statusCode == 200 && mounted) {
+    final errorMessage = medicinesProvider.errorMessage;
+
+    if (result && mounted) {
       await showSuccessDialog(context, 'Medicines received successfully');
-      return true;
     } else {
-      await showErrorDialog(context, result['detail']);
-      return false;
+      await showErrorDialog(context, errorMessage);
     }
+
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
+    MedicinesProvider medicinesProvider =
+        Provider.of<MedicinesProvider>(context);
+
+    final isLoading = medicinesProvider.isLoading;
+
+    final orderedMedicines = medicinesProvider.orderedMedicines;
+
     return GradientScaffold(
       appBar: AppBar(
         title: const Text("Payment"),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: _isProcessing
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'Processing Order...',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+      body: isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'Processing Order...',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 32),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CardField(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Card Details',
-                        ),
-                        style: const TextStyle(
-                          fontSize: 20,
-                        ),
-                        onCardChanged: (card) {
-                          setState(() {
-                            _card = card;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Total: ${widget.amount} EGP',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
                   ),
-                  CustomButton(
-                    onPressed: () {
-                      _isButtonDisabled
-                          ? null
-                          : _card?.complete == true
+                  SizedBox(height: 32),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            )
+          : orderedMedicines.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CardField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Card Details',
+                            ),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                            onCardChanged: (card) {
+                              setState(() {
+                                _card = card;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Total: ${medicinesProvider.orderTotal} EGP',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      CustomButton(
+                        text: 'Pay',
+                        onPressed: () {
+                          _card?.complete == true
                               ? _handlePayPress()
                               : showErrorDialog(
                                   context,
                                   'Please complete the card details',
                                 );
-                    },
-                    text: 'Pay',
-                  )
-                ],
-              ),
-      ),
+                        },
+                        isLoading: _isButtonDisabled,
+                      )
+                    ],
+                  ),
+                )
+              : const SizedBox(),
     );
   }
 }

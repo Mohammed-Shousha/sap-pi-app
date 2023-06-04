@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:sap_pi/providers/medicines_provider.dart';
 import 'package:sap_pi/screens/welcome.dart';
 import 'package:sap_pi/utils/palette.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,14 +19,21 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  runApp(MaterialApp(
-    title: 'SAP PI',
-    theme: ThemeData(
-      primarySwatch: Palette.primary,
-      fontFamily: 'Montserrat',
-      visualDensity: VisualDensity.adaptivePlatformDensity,
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MedicinesProvider()),
+      ],
+      child: MaterialApp(
+        title: 'SAP PI',
+        theme: ThemeData(
+          primarySwatch: Palette.primary,
+          fontFamily: 'Montserrat',
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const WelcomeScreen(),
+      ),
     ),
-    debugShowCheckedModeBanner: false,
-    home: const WelcomeScreen(),
-  ));
+  );
 }
