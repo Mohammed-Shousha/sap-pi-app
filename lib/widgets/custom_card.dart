@@ -39,7 +39,7 @@ class CustomCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 Text(
-                  '${medicine.price} EGP',
+                  '${medicine.price * medicine.quantity} EGP',
                   style: const TextStyle(fontSize: 16),
                 ),
               ],
