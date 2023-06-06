@@ -19,52 +19,56 @@ class CheckoutScreen extends StatelessWidget {
 
     final orderedMedicines = medicinesProvider.orderedMedicines;
 
-    final orderTotal = medicinesProvider.orderTotal;
-
     return GradientScaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Flexible(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: orderedMedicines.length,
-              itemBuilder: (context, index) {
-                final medicine = orderedMedicines[index];
-                return CustomCard(medicine: medicine);
-              },
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Total: $orderTotal',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+      body: orderedMedicines.isNotEmpty
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    itemCount: orderedMedicines.length,
+                    itemBuilder: (context, index) {
+                      final medicine = orderedMedicines[index];
+                      return CustomCard(medicine: medicine);
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              CustomButton(
-                text: "Proceed to Payment",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PaymentScreen(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Total: ${medicinesProvider.orderTotal}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 16),
+                    CustomButton(
+                      text: "Proceed to Payment",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PaymentScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ],
+            )
+          : const Center(
+              child: Center(
+                child: Text("No medicines ordered"),
               ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ],
-      ),
+            ),
     );
   }
 }
