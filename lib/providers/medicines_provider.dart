@@ -33,6 +33,7 @@ class MedicinesProvider extends ChangeNotifier {
     if (response.statusCode != 200) {
       _errorMessage = 'Failed to fetch medicines';
       _isLoading = false;
+      notifyListeners();
       return;
     }
 
@@ -45,6 +46,8 @@ class MedicinesProvider extends ChangeNotifier {
   }
 
   void addMedicineToOrder(Medicine medicine) {
+    _errorMessage = '';
+
     final orderedMedicine = _orderedMedicines.firstWhere(
       (om) => om.id == medicine.id,
       orElse: () => OrderedMedicine.fromMedicine(medicine),
@@ -64,6 +67,8 @@ class MedicinesProvider extends ChangeNotifier {
   }
 
   void removeMedicineFromOrder(OrderedMedicine medicine) {
+    _errorMessage = '';
+
     final orderedMedicine = _orderedMedicines.firstWhere(
       (om) => om.id == medicine.id,
     );
