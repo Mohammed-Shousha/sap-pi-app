@@ -44,13 +44,18 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
 
     final orderedMedicines = medicinesProvider.orderedMedicines;
 
+    final isLoading = medicinesProvider.isLoading;
+
     final errorMessage = medicinesProvider.errorMessage;
 
-    final isLoading = medicinesProvider.isLoading;
+    if (errorMessage.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => showErrorDialog(context, errorMessage),
+      );
+    }
 
     addMedicineToOrder(Medicine medicine) {
       medicinesProvider.addMedicineToOrder(medicine);
-      //TODO: Show Error Dialog
     }
 
     removeMedicineFromOrder(OrderedMedicine medicine) {
