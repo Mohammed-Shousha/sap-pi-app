@@ -34,6 +34,10 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
         Provider.of<MedicinesProvider>(context, listen: false);
 
     await medicinesProvider.fetchMedicines();
+
+    if (medicinesProvider.errorMessage.isNotEmpty && mounted) {
+      showErrorDialog(context, medicinesProvider.errorMessage);
+    }
   }
 
   @override
@@ -48,7 +52,7 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
 
     final errorMessage = medicinesProvider.errorMessage;
 
-    if (errorMessage.isNotEmpty) {
+    if (errorMessage.isNotEmpty && orderedMedicines.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => showErrorDialog(context, errorMessage),
       );
