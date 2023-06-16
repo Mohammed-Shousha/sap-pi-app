@@ -27,6 +27,12 @@ class CustomListTile extends StatelessWidget {
       shadowColor: Palette.primary,
       elevation: 2,
       child: ListTile(
+        contentPadding: subtitleText.contains('\n')
+            ? const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              )
+            : const EdgeInsets.all(16.0),
         iconColor: Palette.primary,
         title: Text(
           titleText,
