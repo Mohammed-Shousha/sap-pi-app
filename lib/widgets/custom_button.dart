@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sap_pi/utils/constants.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -21,7 +22,7 @@ class CustomButton extends StatelessWidget {
             Radius.circular(16.0),
           ),
         ),
-        minimumSize: const Size(250, 75),
+        minimumSize: const Size(250, 100),
         elevation: 4,
       ),
       onPressed: isLoading ? null : onPressed,
@@ -32,7 +33,7 @@ class CustomButton extends StatelessWidget {
           : Text(
               text,
               style: const TextStyle(
-                fontSize: 24.0,
+                fontSize: Constants.largeFontSize,
               ),
             ),
     );

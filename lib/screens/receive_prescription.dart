@@ -166,26 +166,27 @@ class _ReceivePrescriptionScreenState extends State<ReceivePrescriptionScreen> {
         title: const Text('Receive Prescription'),
       ),
       body: Center(
-          child: _isProcessing
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'Processing Order...',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+        child: _isProcessing
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'Processing Order...',
+                    style: TextStyle(
+                      fontSize: Constants.extraLargeFontSize,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 32),
-                    CircularProgressIndicator(),
-                  ],
-                )
-              : CustomButton(
-                  text: 'Scan Prescription QR Code',
-                  onPressed: _scanPrescriptionQrCode,
-                  isLoading: _isButtonDisabled,
-                )),
+                  ),
+                  SizedBox(height: 32),
+                  CircularProgressIndicator(),
+                ],
+              )
+            : CustomButton(
+                text: 'Scan Prescription QR Code',
+                onPressed: _scanPrescriptionQrCode,
+                isLoading: _isButtonDisabled,
+              ),
+      ),
     );
   }
 }

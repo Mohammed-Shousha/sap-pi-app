@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sap_pi/providers/medicines_provider.dart';
 
 import 'package:sap_pi/screens/payment.dart';
+import 'package:sap_pi/utils/constants.dart';
 
 import 'package:sap_pi/widgets/custom_button.dart';
 import 'package:sap_pi/widgets/gradient_scaffold.dart';
@@ -44,7 +45,7 @@ class CheckoutScreen extends StatelessWidget {
                       'Total: ${medicinesProvider.orderTotal}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: Constants.largeFontSize,
                       ),
                     ),
                     const SizedBox(height: 16),

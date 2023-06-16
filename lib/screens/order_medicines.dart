@@ -7,6 +7,7 @@ import 'package:sap_pi/models/ordered_medicine_model.dart';
 import 'package:sap_pi/providers/medicines_provider.dart';
 
 import 'package:sap_pi/screens/checkout.dart';
+import 'package:sap_pi/utils/constants.dart';
 
 import 'package:sap_pi/widgets/custom_button.dart';
 import 'package:sap_pi/widgets/custom_list_tile.dart';
@@ -84,7 +85,7 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
                     const Text(
                       'Medicines',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: Constants.largeFontSize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -115,7 +116,7 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
                               Text(
                                 'Ordered Medicines',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: Constants.largeFontSize,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

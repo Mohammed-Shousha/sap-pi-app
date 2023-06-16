@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sap_pi/models/ordered_medicine_model.dart';
+import 'package:sap_pi/utils/constants.dart';
 import 'package:sap_pi/utils/palette.dart';
 
 class CustomCard extends StatelessWidget {
@@ -27,7 +28,7 @@ class CustomCard extends StatelessWidget {
               medicine.name,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: Constants.mediumFontSize,
               ),
             ),
             const SizedBox(height: 8),
@@ -36,11 +37,15 @@ class CustomCard extends StatelessWidget {
               children: [
                 Text(
                   '${medicine.quantity} pack(s)',
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: Constants.mediumFontSize,
+                  ),
                 ),
                 Text(
                   '${medicine.price * medicine.quantity} EGP',
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: Constants.mediumFontSize,
+                  ),
                 ),
               ],
             ),

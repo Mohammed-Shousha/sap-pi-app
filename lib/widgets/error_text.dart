@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sap_pi/utils/constants.dart';
 
 class ErrorText extends StatelessWidget {
   final String text;
@@ -14,7 +15,7 @@ class ErrorText extends StatelessWidget {
       child: Text(
         text,
         style: const TextStyle(
-          fontSize: 20.0,
+          fontSize: Constants.mediumFontSize,
           fontWeight: FontWeight.bold,
         ),
       ),

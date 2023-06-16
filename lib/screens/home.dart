@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GradientScaffold(
-      body: Row(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
           HomeOption(
@@ -22,6 +22,7 @@ class HomeScreen extends StatelessWidget {
             route: ReceivePrescriptionScreen(),
             image: Constants.prescription,
           ),
+          Divider(),
           HomeOption(
             text: 'Order Medicines',
             route: OrderMedicinesScreen(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sap_pi/utils/constants.dart';
 
 class GradientScaffold extends StatelessWidget {
   final Widget body;
@@ -41,6 +42,10 @@ class GradientScaffold extends StatelessWidget {
             elevation: 0,
             title: appBar?.title,
             actions: appBar?.actions,
+            titleTextStyle: const TextStyle(
+              fontSize: Constants.largeFontSize,
+              fontFamily: 'Montserrat',
+            ),
           ),
           backgroundColor: Colors.transparent,
           body: Padding(

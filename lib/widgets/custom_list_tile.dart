@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sap_pi/utils/constants.dart';
 import 'package:sap_pi/utils/palette.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -31,12 +32,25 @@ class CustomListTile extends StatelessWidget {
           titleText,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+            fontSize: Constants.mediumFontSize,
           ),
         ),
-        subtitle: subtitleText.isNotEmpty ? Text(subtitleText) : null,
-        trailing: IconButton(
-          icon: trailingIcon,
-          onPressed: onIconPressed,
+        subtitle: subtitleText.isNotEmpty
+            ? Text(
+                subtitleText,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: Constants.smallFontSize,
+                ),
+              )
+            : null,
+        trailing: SizedBox(
+          width: 50,
+          height: 50,
+          child: IconButton(
+            icon: trailingIcon,
+            onPressed: onIconPressed,
+          ),
         ),
         style: ListTileStyle.list,
       ),

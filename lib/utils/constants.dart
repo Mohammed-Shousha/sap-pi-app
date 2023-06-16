@@ -1,5 +1,5 @@
 class Constants {
-  static const String baseUrl = "http://192.168.2.8:8000";
+  static const String baseUrl = "http://192.168.1.8:8000";
   static const String paymentUrl =
       "https://sap-backend-production.up.railway.app/payment-sheet";
 
@@ -15,5 +15,10 @@ class Constants {
   static const String logo = 'assets/images/logo.svg';
   static const String prescription = 'assets/images/prescription.png';
   static const String medicine = 'assets/images/medicine.png';
-  static const double imageHeight = 150.0;
+  static const double imageHeight = 200.0;
+
+  static const double extraLargeFontSize = 40.0;
+  static const double largeFontSize = 32.0;
+  static const double mediumFontSize = 26.0;
+  static const double smallFontSize = 20.0;
 }
