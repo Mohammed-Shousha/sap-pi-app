@@ -52,7 +52,7 @@ class _ClosingScreenState extends State<ClosingScreen> {
             Text(
               widget.isSuccessful
                   ? 'Thank You for choosing SAP'
-                  : 'Sorry, there was an error getting medicines',
+                  : 'Sorry, An error occurred!',
               style: const TextStyle(
                 fontSize: Constants.extraLargeFontSize,
                 fontWeight: FontWeight.bold,
