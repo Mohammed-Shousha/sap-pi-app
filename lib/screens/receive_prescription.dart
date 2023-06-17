@@ -173,7 +173,7 @@ class _ReceivePrescriptionScreenState extends State<ReceivePrescriptionScreen> {
                   Text(
                     'Processing Order...',
                     style: TextStyle(
-                      fontSize: Constants.extraLargeFontSize,
+                      fontSize: Constants.largeFontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

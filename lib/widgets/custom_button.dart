@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
             Radius.circular(16.0),
           ),
         ),
-        minimumSize: const Size(250, 100),
+        minimumSize: const Size(200, 75),
         elevation: 4,
       ),
       onPressed: isLoading ? null : onPressed,
@@ -33,7 +33,7 @@ class CustomButton extends StatelessWidget {
           : Text(
               text,
               style: const TextStyle(
-                fontSize: Constants.largeFontSize,
+                fontSize: Constants.mediumFontSize,
               ),
             ),
     );

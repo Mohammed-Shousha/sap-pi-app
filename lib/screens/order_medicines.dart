@@ -85,7 +85,7 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
                     const Text(
                       'Medicines',
                       style: TextStyle(
-                        fontSize: Constants.largeFontSize,
+                        fontSize: Constants.mediumFontSize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -116,7 +116,7 @@ class _OrderMedicinesScreenState extends State<OrderMedicinesScreen> {
                               Text(
                                 'Ordered Medicines',
                                 style: TextStyle(
-                                  fontSize: Constants.largeFontSize,
+                                  fontSize: Constants.mediumFontSize,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

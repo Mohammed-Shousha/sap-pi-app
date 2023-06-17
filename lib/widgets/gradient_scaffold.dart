@@ -43,7 +43,7 @@ class GradientScaffold extends StatelessWidget {
             title: appBar?.title,
             actions: appBar?.actions,
             titleTextStyle: const TextStyle(
-              fontSize: Constants.largeFontSize,
+              fontSize: Constants.mediumFontSize,
               fontFamily: 'Montserrat',
             ),
           ),

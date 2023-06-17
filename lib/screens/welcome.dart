@@ -26,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
             const Text(
               'Welcome to SAP',
               style: TextStyle(
-                fontSize: Constants.extraLargeFontSize,
+                fontSize: Constants.largeFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),

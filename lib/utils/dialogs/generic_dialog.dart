@@ -14,19 +14,19 @@ Future<T?> showGenericDialog<T>({
     context: context,
     builder: (context) {
       return AlertDialog(
-        titlePadding: const EdgeInsets.all(32.0),
-        contentPadding: const EdgeInsets.all(26.0),
-        actionsPadding: const EdgeInsets.all(32.0),
+        titlePadding: const EdgeInsets.all(24.0),
+        contentPadding: const EdgeInsets.all(20.0),
+        actionsPadding: const EdgeInsets.all(20.0),
         title: Text(
           title,
           style: const TextStyle(
-            fontSize: Constants.largeFontSize,
+            fontSize: Constants.mediumFontSize,
           ),
         ),
         content: Text(
           content,
           style: const TextStyle(
-            fontSize: Constants.mediumFontSize,
+            fontSize: Constants.smallFontSize,
           ),
         ),
         actions: options.keys.map((optionTitle) {
@@ -35,7 +35,7 @@ Future<T?> showGenericDialog<T>({
             child: Text(
               optionTitle,
               style: const TextStyle(
-                fontSize: Constants.largeFontSize,
+                fontSize: Constants.mediumFontSize,
               ),
             ),
             onPressed: () {

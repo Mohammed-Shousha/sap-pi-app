@@ -45,7 +45,7 @@ class CheckoutScreen extends StatelessWidget {
                       'Total: ${medicinesProvider.orderTotal}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.largeFontSize,
+                        fontSize: Constants.mediumFontSize,
                       ),
                     ),
                     const SizedBox(height: 16),

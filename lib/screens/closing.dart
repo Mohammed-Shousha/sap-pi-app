@@ -54,7 +54,7 @@ class _ClosingScreenState extends State<ClosingScreen> {
                   ? 'Thank You for choosing SAP'
                   : 'Sorry, An error occurred!',
               style: const TextStyle(
-                fontSize: Constants.extraLargeFontSize,
+                fontSize: Constants.largeFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -64,7 +64,7 @@ class _ClosingScreenState extends State<ClosingScreen> {
                   ? 'We hope to see you again!'
                   : 'Contact us at 1234567890',
               style: const TextStyle(
-                fontSize: Constants.largeFontSize,
+                fontSize: Constants.mediumFontSize,
               ),
             ),
           ],

@@ -38,7 +38,7 @@ class CustomListTile extends StatelessWidget {
           titleText,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: Constants.mediumFontSize,
+            fontSize: Constants.smallFontSize,
           ),
         ),
         subtitle: subtitleText.isNotEmpty
@@ -46,7 +46,7 @@ class CustomListTile extends StatelessWidget {
                 subtitleText,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: Constants.smallFontSize,
+                  fontSize: Constants.extraSmallFontSize,
                 ),
               )
             : null,

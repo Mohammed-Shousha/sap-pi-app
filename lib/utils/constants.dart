@@ -15,10 +15,10 @@ class Constants {
   static const String logo = 'assets/images/logo.svg';
   static const String prescription = 'assets/images/prescription.png';
   static const String medicine = 'assets/images/medicine.png';
-  static const double imageHeight = 200.0;
+  static const double imageHeight = 175.0;
 
-  static const double extraLargeFontSize = 40.0;
   static const double largeFontSize = 32.0;
   static const double mediumFontSize = 26.0;
   static const double smallFontSize = 20.0;
+  static const double extraSmallFontSize = 16.0;
 }

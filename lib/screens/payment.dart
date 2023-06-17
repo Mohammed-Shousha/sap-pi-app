@@ -140,7 +140,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Text(
                     'Processing Order...',
                     style: TextStyle(
-                      fontSize: Constants.extraLargeFontSize,
+                      fontSize: Constants.largeFontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -166,7 +166,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               contentPadding: EdgeInsets.all(26),
                             ),
                             style: const TextStyle(
-                              fontSize: Constants.mediumFontSize,
+                              fontSize: Constants.smallFontSize,
                             ),
                             onCardChanged: (card) {
                               setState(() {
@@ -178,7 +178,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           Text(
                             'Total: ${medicinesProvider.orderTotal} EGP',
                             style: const TextStyle(
-                              fontSize: Constants.largeFontSize,
+                              fontSize: Constants.mediumFontSize,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

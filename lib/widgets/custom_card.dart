@@ -28,7 +28,7 @@ class CustomCard extends StatelessWidget {
               medicine.name,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: Constants.mediumFontSize,
+                fontSize: Constants.smallFontSize,
               ),
             ),
             const SizedBox(height: 8),
@@ -38,13 +38,13 @@ class CustomCard extends StatelessWidget {
                 Text(
                   '${medicine.quantity} pack(s)',
                   style: const TextStyle(
-                    fontSize: Constants.mediumFontSize,
+                    fontSize: Constants.extraSmallFontSize,
                   ),
                 ),
                 Text(
                   '${medicine.price * medicine.quantity} EGP',
                   style: const TextStyle(
-                    fontSize: Constants.mediumFontSize,
+                    fontSize: Constants.extraSmallFontSize,
                   ),
                 ),
               ],
