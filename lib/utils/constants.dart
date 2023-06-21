@@ -1,5 +1,5 @@
 class Constants {
-  static const String baseUrl = "http://192.168.1.8:8000";
+  static const String baseUrl = "http://192.168.2.8:8000";
   static const String paymentUrl =
       "https://sap-backend-production.up.railway.app/payment-sheet";
 
