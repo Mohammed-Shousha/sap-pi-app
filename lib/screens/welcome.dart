@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
             CustomButton(
               text: 'Start',
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const HomeScreen(),
