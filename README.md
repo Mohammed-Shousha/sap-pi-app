@@ -30,4 +30,4 @@ Similar to the prescription retrieval feature, if the medicine retrieval is succ
 
 ## Video Demo
 
-https://github.com/Mohammed-Shousha/sap-pi-app/assets/65350067/2715da19-a901-40be-9c47-3a07e396e27b
+https://github.com/Mohammed-Shousha/sap-pi-app/assets/65350067/0de826ad-6fb6-4bae-b4b4-04b7a3410379
