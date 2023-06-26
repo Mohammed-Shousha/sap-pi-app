@@ -27,3 +27,7 @@ Similar to the prescription retrieval feature, if the medicine retrieval is succ
 - **provider**: The provider package is used for state management in the app. It enables efficient management of app state and data flow, ensuring a smooth and reactive user experience.
 
 - **http**: The http package is used for making HTTP requests from the app. It facilitates communication between the app and any necessary backend services running on the raspberry pi for retrieving prescription and medicine data.
+
+## Video Demo
+
+https://github.com/Mohammed-Shousha/sap-pi-app/assets/65350067/2715da19-a901-40be-9c47-3a07e396e27b
